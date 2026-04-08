@@ -14,19 +14,24 @@ import java.time.Period;
 @Service
 public class ApplicationService {
 
-/*    private final ApplicationRepository applicationRepository;
+    private final ApplicationRepository applicationRepository;
 
     public ApplicationService(ApplicationRepository applicationRepository) {
         this.applicationRepository = applicationRepository;
-    }*/
+    }
 
     @Value("${loan.max-age}")
     private int maxAge;
 
     public void processApplication(ApplicationInputDTO dto) {
+
         // validate the personal code
         LocalDate birthdate = getAndValidateBirthdate(dto.personalCode());
         validateCheckNumer(dto.personalCode());
+
+        if (applicationRepository.existsByPersonalCodeAndStatus(dto.personalCode(), ApplicationStatus.IN_REVIEW)) {
+            throw new IllegalArgumentException("Customer already has an active application");
+        }
 
         createApplication(dto, birthdate);
     }
@@ -60,7 +65,7 @@ public class ApplicationService {
         System.out.println("Age of applicant: " + age);
         System.out.println("Application status: " + status);
 
-        //applicationRepository.save(application);
+        applicationRepository.save(application);
 
     }
 
