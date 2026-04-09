@@ -4,6 +4,7 @@ import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
 import com.marten.loanprocessservice.application.model.Application;
 import com.marten.loanprocessservice.application.model.ApplicationStatus;
 import com.marten.loanprocessservice.application.model.RejectionReason;
+import com.marten.loanprocessservice.schedule.ScheduleService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,11 @@ import java.time.Period;
 public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final ScheduleService scheduleService;
 
-    public ApplicationService(ApplicationRepository applicationRepository) {
+    public ApplicationService(ApplicationRepository applicationRepository, ScheduleService scheduleService) {
         this.applicationRepository = applicationRepository;
+        this.scheduleService = scheduleService;
     }
 
     @Value("${loan.max-age}")
@@ -61,11 +64,12 @@ public class ApplicationService {
                 rejectionReason
         );
 
-        System.out.println("Application created: " + application);
+/*        System.out.println("Application created: " + application);
         System.out.println("Age of applicant: " + age);
-        System.out.println("Application status: " + status);
+        System.out.println("Application status: " + status);*/
 
-        applicationRepository.save(application);
+        applicationRepository.save(application); // save application
+        scheduleService.createSchedule(application); // create schedule for applciation
 
     }
 

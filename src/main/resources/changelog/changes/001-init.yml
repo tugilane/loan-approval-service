@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 001-create-loan-applications
-      author: you
+      author: marten
       changes:
         - createTable:
             tableName: loan_applications
