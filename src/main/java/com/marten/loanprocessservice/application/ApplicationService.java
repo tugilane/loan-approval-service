@@ -5,12 +5,15 @@ import com.marten.loanprocessservice.application.model.Application;
 import com.marten.loanprocessservice.application.model.ApplicationStatus;
 import com.marten.loanprocessservice.application.model.RejectionReason;
 import com.marten.loanprocessservice.schedule.ScheduleService;
+import com.marten.loanprocessservice.schedule.model.ScheduleRow;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Service
 public class ApplicationService {
@@ -26,6 +29,7 @@ public class ApplicationService {
     @Value("${loan.max-age}")
     private int maxAge;
 
+    @Transactional // appointment and schedule go hand-in-hand, if one fails, the other should too.
     public void processApplication(ApplicationInputDTO dto) {
 
         // validate the personal code
@@ -39,7 +43,7 @@ public class ApplicationService {
         createApplication(dto, birthdate);
     }
 
-    private void createApplication(ApplicationInputDTO dto, LocalDate birthDate) {
+    public void createApplication(ApplicationInputDTO dto, LocalDate birthDate) {
 
         int age = Period.between(birthDate, LocalDate.now()).getYears();
         ApplicationStatus status;
@@ -68,9 +72,10 @@ public class ApplicationService {
         System.out.println("Age of applicant: " + age);
         System.out.println("Application status: " + status);*/
 
-        applicationRepository.save(application); // save application
-        scheduleService.createSchedule(application); // create schedule for applciation
+        applicationRepository.save(application);
 
+        List<ScheduleRow> schedule = scheduleService.createSchedule(application);
+        scheduleService.saveSchedule(schedule);
     }
 
     // check if personal code is correct format, later on in other methods we check if the age is acceptable

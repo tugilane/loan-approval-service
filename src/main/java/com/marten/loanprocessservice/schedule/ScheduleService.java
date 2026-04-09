@@ -13,7 +13,17 @@ import java.util.List;
 @Service
 public class ScheduleService {
 
-    public void createSchedule(Application application) {
+    private final ScheduleRepository scheduleRepository;
+
+    public ScheduleService(ScheduleRepository scheduleRepository) {
+        this.scheduleRepository = scheduleRepository;
+    }
+
+    public void saveSchedule(List<ScheduleRow> schedule) {
+        scheduleRepository.saveAll(schedule);
+    }
+
+    public List<ScheduleRow> createSchedule(Application application) {
         BigDecimal loanAmount = application.getLoanAmount();
         int months = application.getLoanPeriodMonths();
 
@@ -78,9 +88,11 @@ public class ScheduleService {
             schedule.add(row);
         }
 
-        for (int i = 0; i < schedule.size(); i++) {
+/*        for (int i = 0; i < schedule.size(); i++) {
             System.out.println(schedule.get(i).getPaymentNumber() + " " + schedule.get(i).getPaymentDate() + " " + schedule.get(i).getMonthlyPayment() + " " + schedule.get(i).getPrincipalPayment() + " " + schedule.get(i).getInterestPayment() + " " + schedule.get(i).getRemainingBalance());
-        }
+        }*/
+
+        return schedule;
 
     }
 }

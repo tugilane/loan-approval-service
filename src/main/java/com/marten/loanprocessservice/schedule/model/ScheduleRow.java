@@ -6,22 +6,34 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "payment_schedule")
 public class ScheduleRow {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Integer paymentNumber;
 
+    @Column(nullable = false)
     private LocalDate paymentDate;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal monthlyPayment;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal principalPayment;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal interestPayment;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal remainingBalance;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
     protected ScheduleRow() {
