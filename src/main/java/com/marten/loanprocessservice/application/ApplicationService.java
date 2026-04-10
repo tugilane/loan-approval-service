@@ -1,9 +1,6 @@
 package com.marten.loanprocessservice.application;
 
-import com.marten.loanprocessservice.application.dto.ApplicationDetailsDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationInReviewSummaryDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationSummaryDTO;
+import com.marten.loanprocessservice.application.dto.*;
 import com.marten.loanprocessservice.application.model.Application;
 import com.marten.loanprocessservice.application.model.ApplicationStatus;
 import com.marten.loanprocessservice.application.model.RejectionReason;
@@ -12,6 +9,8 @@ import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
 import com.marten.loanprocessservice.schedule.model.ScheduleRow;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
@@ -177,9 +176,8 @@ public class ApplicationService {
         );
     }
 
-    public List<ApplicationSummaryDTO> getAllApplications() {
-        return applicationRepository.findAll()
-                .stream()
+    public Page<ApplicationSummaryDTO> getAllApplications(Pageable pageable) {
+        return applicationRepository.findAll(pageable)
                 .map(application -> new ApplicationSummaryDTO(
                         application.getId(),
                         application.getFirstName(),
@@ -187,19 +185,44 @@ public class ApplicationService {
                         application.getPersonalCode(),
                         application.getStatus(),
                         application.getRejectionReason()
-                ))
-                .toList();
+                ));
     }
 
-    public List<ApplicationInReviewSummaryDTO> getAllApplicationsInReview() {
-        return applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW)
-                .stream()
+    public Page<ApplicationInReviewSummaryDTO> getAllApplicationsInReview(Pageable pageable) {
+        return applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW, pageable)
                 .map(application -> new ApplicationInReviewSummaryDTO(
                         application.getId(),
                         application.getFirstName(),
                         application.getLastName(),
                         application.getPersonalCode()
-                ))
-                .toList();
+                ));
+    }
+
+    public Void approveApplication(long id) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+
+        if (application.getStatus() != ApplicationStatus.IN_REVIEW) {
+            throw new IllegalStateException("Only applications in review can be approved");
+        }
+
+        application.setStatus(ApplicationStatus.APPROVED);
+        applicationRepository.save(application);
+
+        return null;
+    }
+
+    public void rejectApplication(long id, RejectApplicationInputDTO dto) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+
+        if (application.getStatus() != ApplicationStatus.IN_REVIEW) {
+            throw new IllegalArgumentException("Only applications in review can be rejected");
+        }
+
+        application.setStatus(ApplicationStatus.REJECTED);
+        application.setRejectionReason(dto.rejectionReason());
+
+        applicationRepository.save(application);
     }
 }
