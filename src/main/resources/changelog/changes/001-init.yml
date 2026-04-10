@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-loan-applications
+      id: 001-create-loan-applications-table
       author: marten
       changes:
         - createTable:

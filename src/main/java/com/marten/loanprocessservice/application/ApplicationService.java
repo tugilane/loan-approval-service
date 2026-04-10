@@ -1,10 +1,12 @@
 package com.marten.loanprocessservice.application;
 
+import com.marten.loanprocessservice.application.dto.ApplicationOutputDTO;
 import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
 import com.marten.loanprocessservice.application.model.Application;
 import com.marten.loanprocessservice.application.model.ApplicationStatus;
 import com.marten.loanprocessservice.application.model.RejectionReason;
 import com.marten.loanprocessservice.schedule.ScheduleService;
+import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
 import com.marten.loanprocessservice.schedule.model.ScheduleRow;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -148,5 +150,28 @@ public class ApplicationService {
         if (checkNum != lastDigit) {
             throw new IllegalArgumentException("Invalid personal code: check number does not match");
         }
+    }
+
+    public ApplicationOutputDTO getApplicationDetails(long id) {
+
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+
+        // ask schedule service for the schedule of this application
+        List<ScheduleRowOutputDTO> schedule = scheduleService.getScheduleByApplicationId(id);
+
+        return new ApplicationOutputDTO(
+                application.getId(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getPersonalCode(),
+                application.getLoanPeriodMonths(),
+                application.getInterestMargin(),
+                application.getBaseInterestRate(),
+                application.getLoanAmount(),
+                application.getStatus(),
+                application.getRejectionReason(),
+                schedule
+        );
     }
 }

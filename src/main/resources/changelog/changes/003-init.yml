@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-indexes
+      author: marten
+      changes:
+        - createIndex:
+            indexName: idx_application_personal_code_status
+            tableName: application
+            columns:
+              - column:
+                  name: personal_code
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_schedule_row_application_id_payment_number
+            tableName: schedule_row
+            columns:
+              - column:
+                  name: application_id
+              - column:
+                  name: payment_number

@@ -1,6 +1,7 @@
 package com.marten.loanprocessservice.schedule;
 
 import com.marten.loanprocessservice.application.model.Application;
+import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
 import com.marten.loanprocessservice.schedule.model.ScheduleRow;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,21 @@ public class ScheduleService {
 
     public void saveSchedule(List<ScheduleRow> schedule) {
         scheduleRepository.saveAll(schedule);
+    }
+
+    public List<ScheduleRowOutputDTO> getScheduleByApplicationId(long id) {
+        return scheduleRepository.findByApplicationIdOrderByPaymentNumberAsc(id)
+                .stream()
+                .map(row -> new ScheduleRowOutputDTO(
+                        row.getPaymentNumber(),
+                        row.getPaymentDate(),
+                        row.getMonthlyPayment(),
+                        row.getPrincipalPayment(),
+                        row.getInterestPayment(),
+                        row.getRemainingBalance()
+                ))
+                .toList();
+
     }
 
     public List<ScheduleRow> createSchedule(Application application) {
