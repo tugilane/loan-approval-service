@@ -7,7 +7,7 @@ import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record ApplicationOutputDTO(
+public record ApplicationDetailsDTO(
         Long id,
         String firstName,
         String lastName,

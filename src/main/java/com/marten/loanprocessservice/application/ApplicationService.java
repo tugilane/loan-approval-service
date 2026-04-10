@@ -1,7 +1,9 @@
 package com.marten.loanprocessservice.application;
 
-import com.marten.loanprocessservice.application.dto.ApplicationOutputDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationDetailsDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationInReviewSummaryDTO;
 import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationSummaryDTO;
 import com.marten.loanprocessservice.application.model.Application;
 import com.marten.loanprocessservice.application.model.ApplicationStatus;
 import com.marten.loanprocessservice.application.model.RejectionReason;
@@ -152,7 +154,7 @@ public class ApplicationService {
         }
     }
 
-    public ApplicationOutputDTO getApplicationDetails(long id) {
+    public ApplicationDetailsDTO getApplicationDetails(long id) {
 
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Application not found"));
@@ -160,7 +162,7 @@ public class ApplicationService {
         // ask schedule service for the schedule of this application
         List<ScheduleRowOutputDTO> schedule = scheduleService.getScheduleByApplicationId(id);
 
-        return new ApplicationOutputDTO(
+        return new ApplicationDetailsDTO(
                 application.getId(),
                 application.getFirstName(),
                 application.getLastName(),
@@ -173,5 +175,31 @@ public class ApplicationService {
                 application.getRejectionReason(),
                 schedule
         );
+    }
+
+    public List<ApplicationSummaryDTO> getAllApplications() {
+        return applicationRepository.findAll()
+                .stream()
+                .map(application -> new ApplicationSummaryDTO(
+                        application.getId(),
+                        application.getFirstName(),
+                        application.getLastName(),
+                        application.getPersonalCode(),
+                        application.getStatus(),
+                        application.getRejectionReason()
+                ))
+                .toList();
+    }
+
+    public List<ApplicationInReviewSummaryDTO> getAllApplicationsInReview() {
+        return applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW)
+                .stream()
+                .map(application -> new ApplicationInReviewSummaryDTO(
+                        application.getId(),
+                        application.getFirstName(),
+                        application.getLastName(),
+                        application.getPersonalCode()
+                ))
+                .toList();
     }
 }

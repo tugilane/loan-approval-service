@@ -1,11 +1,15 @@
 package com.marten.loanprocessservice.application;
 
-import com.marten.loanprocessservice.application.dto.ApplicationOutputDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationDetailsDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationInReviewSummaryDTO;
 import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
+import com.marten.loanprocessservice.application.dto.ApplicationSummaryDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ApplicationController {
@@ -23,9 +27,17 @@ public class ApplicationController {
     }
 
     @GetMapping("/applications/{id}")
-    public ResponseEntity<ApplicationOutputDTO> getApplication(@PathVariable long id){
+    public ResponseEntity<ApplicationDetailsDTO> getApplication(@PathVariable long id){
         return ResponseEntity.ok(applicationService.getApplicationDetails(id));
     }
 
-    //@GetMapping("/applications/show/inreview")
+    @GetMapping("/applications")
+    public ResponseEntity<List<ApplicationSummaryDTO>> getAllApplications(){
+        return ResponseEntity.ok(applicationService.getAllApplications());
+    }
+
+    @GetMapping("/applications/in-review")
+    public ResponseEntity<List<ApplicationInReviewSummaryDTO>> getAllApplicationsInReview(){
+        return ResponseEntity.ok(applicationService.getAllApplicationsInReview());
+    }
 }
