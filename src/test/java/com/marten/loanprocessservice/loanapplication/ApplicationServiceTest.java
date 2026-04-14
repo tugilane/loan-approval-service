@@ -1,15 +1,15 @@
-package com.marten.loanprocessservice.application;
+package com.marten.loanprocessservice.loanapplication;
 
-import com.marten.loanprocessservice.application.dto.ApplicationDetailsDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationInReviewSummaryDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationInputDTO;
-import com.marten.loanprocessservice.application.dto.ApplicationSummaryDTO;
-import com.marten.loanprocessservice.application.dto.RejectApplicationInputDTO;
-import com.marten.loanprocessservice.application.model.Application;
-import com.marten.loanprocessservice.application.model.ApplicationStatus;
-import com.marten.loanprocessservice.application.model.RejectionReason;
-import com.marten.loanprocessservice.schedule.ScheduleService;
-import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationInReviewSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
+import com.marten.loanprocessservice.loanschedule.ScheduleService;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

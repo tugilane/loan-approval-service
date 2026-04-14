@@ -1,4 +1,4 @@
-package com.marten.loanprocessservice.application.dto;
+package com.marten.loanprocessservice.loanapplication.dto;
 
 import jakarta.validation.constraints.*;
 
@@ -14,7 +14,7 @@ public record ApplicationInputDTO(
         @Size(max = 32)
         String lastName,
 
-        @NotNull
+        @NotBlank
         @Size(min = 11, max = 11)
         String personalCode,
 
@@ -35,4 +35,5 @@ public record ApplicationInputDTO(
         @DecimalMin("5000.0")
         BigDecimal loanAmount
 
-) {}
+) {
+}

@@ -1,4 +1,4 @@
-package com.marten.loanprocessservice.application.model;
+package com.marten.loanprocessservice.loanapplication.model;
 
 public enum ApplicationStatus {
     IN_REVIEW,

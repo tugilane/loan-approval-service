@@ -1,4 +1,4 @@
-package com.marten.loanprocessservice.schedule.dto;
+package com.marten.loanprocessservice.loanschedule.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

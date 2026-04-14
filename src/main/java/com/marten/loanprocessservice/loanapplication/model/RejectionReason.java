@@ -1,4 +1,4 @@
-package com.marten.loanprocessservice.application.model;
+package com.marten.loanprocessservice.loanapplication.model;
 
 public enum RejectionReason {
     CUSTOMER_TOO_OLD,
@@ -6,5 +6,4 @@ public enum RejectionReason {
     TOO_LITTLE_WORK_EXPERIENCE,
     TOO_MANY_LOANS,
     OTHER
-
 }

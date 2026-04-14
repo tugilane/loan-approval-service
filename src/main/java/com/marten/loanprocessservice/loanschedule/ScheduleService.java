@@ -1,8 +1,8 @@
-package com.marten.loanprocessservice.schedule;
+package com.marten.loanprocessservice.loanschedule;
 
-import com.marten.loanprocessservice.application.model.Application;
-import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
-import com.marten.loanprocessservice.schedule.model.ScheduleRow;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
+import com.marten.loanprocessservice.loanschedule.model.ScheduleRow;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,9 +22,10 @@ public class ScheduleService {
 
     /**
      * Create and save loan payment schedule for new application.
+     *
      * @param application new application.
      */
-    public void createAndSaveSchedule(Application application){
+    public void createAndSaveSchedule(Application application) {
 
         List<ScheduleRow> newSchedule = createSchedule(application);
 
@@ -33,6 +34,7 @@ public class ScheduleService {
 
     /**
      * Get loan payment schedule by already existing application (id).
+     *
      * @param id application id
      * @return payment schedule
      */
@@ -53,6 +55,7 @@ public class ScheduleService {
 
     /**
      * Generates a loan payment schedule using annuity calculation.
+     *
      * @param application application for which the schedule is for
      * @return payment schedule
      */

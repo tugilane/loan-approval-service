@@ -16,8 +16,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
-        // Handles @Valid DTO errors for request bodies.
+
+    // Handles @Valid DTO errors for request bodies.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-        // Handles malformed JSON payloads
+    // Handles malformed JSON payloads
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiErrorResponse> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex,
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-        // Handles business rule violations.
+    // Handles business rule violations.
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgument(
             IllegalArgumentException ex,
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-        // Handles invalid state transitions for application approval (mapped to HTTP 409).
+    // Handles invalid state transitions for application approval (mapped to HTTP 409).
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalState(
             IllegalStateException ex,
@@ -94,7 +94,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
-        // Safety net for unexpected server errors.
+    // Safety net for unexpected server errors.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleUnhandled(
             Exception ex,

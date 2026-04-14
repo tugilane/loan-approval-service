@@ -1,12 +1,11 @@
-package com.marten.loanprocessservice.schedule;
+package com.marten.loanprocessservice.loanschedule;
 
-import com.marten.loanprocessservice.application.model.Application;
-import com.marten.loanprocessservice.application.model.ApplicationStatus;
-import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
-import com.marten.loanprocessservice.schedule.model.ScheduleRow;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
+import com.marten.loanprocessservice.loanschedule.model.ScheduleRow;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

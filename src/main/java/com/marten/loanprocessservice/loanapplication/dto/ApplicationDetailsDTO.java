@@ -1,8 +1,8 @@
-package com.marten.loanprocessservice.application.dto;
+package com.marten.loanprocessservice.loanapplication.dto;
 
-import com.marten.loanprocessservice.application.model.ApplicationStatus;
-import com.marten.loanprocessservice.application.model.RejectionReason;
-import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

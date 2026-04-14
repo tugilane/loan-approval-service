@@ -1,12 +1,11 @@
-package com.marten.loanprocessservice.application;
+package com.marten.loanprocessservice.loanapplication;
 
-import com.marten.loanprocessservice.application.dto.*;
-import com.marten.loanprocessservice.application.model.Application;
-import com.marten.loanprocessservice.application.model.ApplicationStatus;
-import com.marten.loanprocessservice.application.model.RejectionReason;
-import com.marten.loanprocessservice.schedule.ScheduleService;
-import com.marten.loanprocessservice.schedule.dto.ScheduleRowOutputDTO;
-import com.marten.loanprocessservice.schedule.model.ScheduleRow;
+import com.marten.loanprocessservice.loanapplication.dto.*;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
+import com.marten.loanprocessservice.loanschedule.ScheduleService;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -36,6 +35,7 @@ public class ApplicationService {
      * Processes a new loan application.
      * Validates the applicant's personal code, ensures that no application is currently in review.
      * Creates the application, persists it, and creates and persists the schedule.
+     *
      * @param dto - validated application input data
      */
     @Transactional // application and schedule go hand-in-hand, if creating one fails, the other should too.
@@ -60,6 +60,7 @@ public class ApplicationService {
 
     /**
      * Returns detailed information for a single application, including its schedule.
+     *
      * @param id application id
      * @return application details and the corresponding schedule
      */
@@ -87,6 +88,7 @@ public class ApplicationService {
 
     /**
      * Returns a paginated list of application summaries.
+     *
      * @param pageable application id
      * @return paginated application summaries
      */
@@ -104,6 +106,7 @@ public class ApplicationService {
 
     /**
      * Returns a paginated list of application summaries that are in review.
+     *
      * @param pageable application id
      * @return paginated application summaries (in-review)
      */
@@ -119,6 +122,7 @@ public class ApplicationService {
 
     /**
      * Approves an application that is currently in review.
+     *
      * @param id application id
      */
     public void approveApplication(long id) {
@@ -135,6 +139,7 @@ public class ApplicationService {
 
     /**
      * Rejects an application that is currently in review.
+     *
      * @param id application id
      */
     public void rejectApplication(long id, RejectApplicationInputDTO dto) {
@@ -152,6 +157,7 @@ public class ApplicationService {
 
     /**
      * Validate and return the birthdate of the applicant based on the personal code.
+     *
      * @param personalCode personal code of the applicant
      * @return birthdate of the applicant.
      */
@@ -188,11 +194,12 @@ public class ApplicationService {
 
     /**
      * Validate check number of the applicatant's personal code.
+     *
      * @param personalCode personal code of the applicant
      */
     private void validateCheckNumer(String personalCode) {
-        int[] weights1 = {1,2,3,4,5,6,7,8,9,1};
-        int[] weights2 = {3,4,5,6,7,8,9,1,2,3};
+        int[] weights1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 1};
+        int[] weights2 = {3, 4, 5, 6, 7, 8, 9, 1, 2, 3};
 
         // The first 10 digits of the personal code are multiplied
         // by the corresponding first-level weights and summed up.
@@ -232,7 +239,8 @@ public class ApplicationService {
 
     /**
      * Create and return a new application
-     * @param dto application input data from controller
+     *
+     * @param dto       application input data from controller
      * @param birthDate applicant birthdate
      * @return application entity
      */

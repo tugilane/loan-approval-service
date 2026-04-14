@@ -1,6 +1,6 @@
-package com.marten.loanprocessservice.application.dto;
+package com.marten.loanprocessservice.loanapplication.dto;
 
-import com.marten.loanprocessservice.application.model.RejectionReason;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
 import jakarta.validation.constraints.NotNull;
 
 public record RejectApplicationInputDTO(

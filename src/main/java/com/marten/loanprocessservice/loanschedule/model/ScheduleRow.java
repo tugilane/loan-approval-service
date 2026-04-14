@@ -1,6 +1,6 @@
-package com.marten.loanprocessservice.schedule.model;
+package com.marten.loanprocessservice.loanschedule.model;
 
-import com.marten.loanprocessservice.application.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.Application;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
