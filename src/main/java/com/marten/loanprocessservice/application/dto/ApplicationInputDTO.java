@@ -1,7 +1,6 @@
 package com.marten.loanprocessservice.application.dto;
 
 import jakarta.validation.constraints.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.math.BigDecimal;
 
@@ -15,7 +14,7 @@ public record ApplicationInputDTO(
         @Size(max = 32)
         String lastName,
 
-        @NotBlank
+        @NotNull
         @Size(min = 11, max = 11)
         String personalCode,
 

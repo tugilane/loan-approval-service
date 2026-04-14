@@ -60,7 +60,7 @@ public class ApplicationService {
 
     /**
      * Returns detailed information for a single application, including its schedule.
-     * @param id - application id
+     * @param id application id
      * @return application details and the corresponding schedule
      */
     public ApplicationDetailsDTO getApplicationDetails(long id) {
@@ -87,7 +87,7 @@ public class ApplicationService {
 
     /**
      * Returns a paginated list of application summaries.
-     * @param pageable - application id
+     * @param pageable application id
      * @return paginated application summaries
      */
     public Page<ApplicationSummaryDTO> getAllApplications(Pageable pageable) {
@@ -104,7 +104,7 @@ public class ApplicationService {
 
     /**
      * Returns a paginated list of application summaries that are in review.
-     * @param pageable - application id
+     * @param pageable application id
      * @return paginated application summaries (in-review)
      */
     public Page<ApplicationInReviewSummaryDTO> getAllApplicationsInReview(Pageable pageable) {
@@ -119,7 +119,7 @@ public class ApplicationService {
 
     /**
      * Approves an application that is currently in review.
-     * @param id - application id
+     * @param id application id
      */
     public void approveApplication(long id) {
         Application application = findApplicationById(id);
@@ -135,7 +135,7 @@ public class ApplicationService {
 
     /**
      * Rejects an application that is currently in review.
-     * @param id - application id
+     * @param id application id
      */
     public void rejectApplication(long id, RejectApplicationInputDTO dto) {
         Application application = findApplicationById(id);
@@ -152,7 +152,7 @@ public class ApplicationService {
 
     /**
      * Validate and return the birthdate of the applicant based on the personal code.
-     * @param personalCode - personal code of the applicant
+     * @param personalCode personal code of the applicant
      * @return birthdate of the applicant.
      */
     private LocalDate getAndValidateBirthdate(String personalCode) {
@@ -188,7 +188,7 @@ public class ApplicationService {
 
     /**
      * Validate check number of the applicatant's personal code.
-     * @param personalCode - personal code of the applicant
+     * @param personalCode personal code of the applicant
      */
     private void validateCheckNumer(String personalCode) {
         int[] weights1 = {1,2,3,4,5,6,7,8,9,1};
@@ -232,8 +232,8 @@ public class ApplicationService {
 
     /**
      * Create and return a new application
-     * @param dto - application input data from controller
-     * @param birthDate - applicant birthdate
+     * @param dto application input data from controller
+     * @param birthDate applicant birthdate
      * @return application entity
      */
     private Application createApplication(ApplicationInputDTO dto, LocalDate birthDate) {

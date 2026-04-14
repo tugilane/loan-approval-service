@@ -22,16 +22,18 @@ public class ScheduleService {
 
     /**
      * Create and save loan payment schedule for new application.
-     * @param application - new application.
+     * @param application new application.
      */
     public void createAndSaveSchedule(Application application){
+
         List<ScheduleRow> newSchedule = createSchedule(application);
+
         saveSchedule(newSchedule);
     }
 
     /**
      * Get loan payment schedule by already existing application (id).
-     * @param id
+     * @param id application id
      * @return payment schedule
      */
     public List<ScheduleRowOutputDTO> getScheduleByApplicationId(long id) {
@@ -49,6 +51,11 @@ public class ScheduleService {
 
     }
 
+    /**
+     * Generates a loan payment schedule using annuity calculation.
+     * @param application application for which the schedule is for
+     * @return payment schedule
+     */
     private List<ScheduleRow> createSchedule(Application application) {
         BigDecimal loanAmount = application.getLoanAmount();
         int months = application.getLoanPeriodMonths();
