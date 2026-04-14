@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationApproveResponseExampleDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationRejectResponseExampleDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryRejectedDTO;
 import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
 
@@ -103,7 +103,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/applications/{id}/reject")
-    @Operation(summary = "Reject an in-review application")
+    @Operation(summary = "Reject an in-review application", description = "Choose an enum value from schema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Application rejected",
                     content = @Content(schema = @Schema(implementation = ApplicationRejectResponseExampleDTO.class)))

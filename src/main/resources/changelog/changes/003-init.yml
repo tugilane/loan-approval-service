@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
         - createIndex:
             indexName: idx_application_personal_code_status
-            tableName: application
+            tableName: loan_applications
             columns:
               - column:
                   name: personal_code
@@ -14,7 +14,7 @@ databaseChangeLog:
 
         - createIndex:
             indexName: idx_schedule_row_application_id_payment_number
-            tableName: schedule_row
+            tableName: payment_schedule
             columns:
               - column:
                   name: application_id

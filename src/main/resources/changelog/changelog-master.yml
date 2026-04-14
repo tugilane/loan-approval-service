@@ -6,3 +6,7 @@ databaseChangeLog:
   - include:
       file: changes/002-init.yml
       relativeToChangelogFile: true
+
+  - include:
+      file: changes/003-init.yml
+      relativeToChangelogFile: true     
