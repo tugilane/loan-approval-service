@@ -21,6 +21,7 @@ public class ApplicationController {
         this.applicationService = applicationService;
     }
 
+
     @PostMapping("/apply")
     public ResponseEntity<Void> receiveLoanApplication(@Valid @RequestBody ApplicationInputDTO dto) {
         applicationService.processApplication(dto);
@@ -48,7 +49,8 @@ public class ApplicationController {
 
     @PostMapping("/applications/{id}/approve")
     public ResponseEntity<Void> approveApplication(@PathVariable long id){
-        return ResponseEntity.ok(applicationService.approveApplication(id));
+        applicationService.approveApplication(id);
+        return ResponseEntity.ok().build();
 }
 
     @PostMapping("applications/{id}/reject")
