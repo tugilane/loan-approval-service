@@ -24,7 +24,32 @@ public class ScheduleService {
      * Create and save loan payment schedule for new application.
      * @param application - new application.
      */
-    public void createAndSaveSchedule(Application application) {
+    public void createAndSaveSchedule(Application application){
+        List<ScheduleRow> newSchedule = createSchedule(application);
+        saveSchedule(newSchedule);
+    }
+
+    /**
+     * Get loan payment schedule by already existing application (id).
+     * @param id
+     * @return payment schedule
+     */
+    public List<ScheduleRowOutputDTO> getScheduleByApplicationId(long id) {
+        return scheduleRepository.findByApplicationIdOrderByPaymentNumberAsc(id)
+                .stream()
+                .map(row -> new ScheduleRowOutputDTO(
+                        row.getPaymentNumber(),
+                        row.getPaymentDate(),
+                        row.getMonthlyPayment(),
+                        row.getPrincipalPayment(),
+                        row.getInterestPayment(),
+                        row.getRemainingBalance()
+                ))
+                .toList();
+
+    }
+
+    private List<ScheduleRow> createSchedule(Application application) {
         BigDecimal loanAmount = application.getLoanAmount();
         int months = application.getLoanPeriodMonths();
 
@@ -93,28 +118,7 @@ public class ScheduleService {
             System.out.println(schedule.get(i).getPaymentNumber() + " " + schedule.get(i).getPaymentDate() + " " + schedule.get(i).getMonthlyPayment() + " " + schedule.get(i).getPrincipalPayment() + " " + schedule.get(i).getInterestPayment() + " " + schedule.get(i).getRemainingBalance());
         }*/
 
-        saveSchedule(schedule);
-
-    }
-
-    /**
-     * Get loan payment schedule by already existing application (id).
-     * @param id
-     * @return payment schedule
-     */
-    public List<ScheduleRowOutputDTO> getScheduleByApplicationId(long id) {
-        return scheduleRepository.findByApplicationIdOrderByPaymentNumberAsc(id)
-                .stream()
-                .map(row -> new ScheduleRowOutputDTO(
-                        row.getPaymentNumber(),
-                        row.getPaymentDate(),
-                        row.getMonthlyPayment(),
-                        row.getPrincipalPayment(),
-                        row.getInterestPayment(),
-                        row.getRemainingBalance()
-                ))
-                .toList();
-
+        return schedule;
     }
 
     private void saveSchedule(List<ScheduleRow> schedule) {
