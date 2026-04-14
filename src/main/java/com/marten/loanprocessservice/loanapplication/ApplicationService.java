@@ -34,12 +34,12 @@ public class ApplicationService {
     /**
      * Processes a new loan application.
      * Validates the applicant's personal code, ensures that no application is currently in review.
-     * Creates the application, persists it, and creates and persists the schedule.
+     * Creates the application and persists it. A payment schedule is created only for applications in review.
      *
      * @param dto - validated application input data
      */
     @Transactional // application and schedule go hand-in-hand, if creating one fails, the other should too.
-    public void processApplication(ApplicationInputDTO dto) {
+    public ApplicationSummaryDTO processApplication(ApplicationInputDTO dto) {
 
         // validate the personal code
         LocalDate birthdate = getAndValidateBirthdate(dto.personalCode());
@@ -54,8 +54,12 @@ public class ApplicationService {
 
         saveApplication(newApplication);
 
-        // create and save schedule
-        scheduleService.createAndSaveSchedule(newApplication);
+        // No schedule is needed for auto-rejected applications.
+        if (newApplication.getStatus() == ApplicationStatus.IN_REVIEW) {
+            scheduleService.createAndSaveSchedule(newApplication);
+        }
+
+        return toSummaryDTO(newApplication);
     }
 
     /**
@@ -110,9 +114,9 @@ public class ApplicationService {
      * @param pageable application id
      * @return paginated application summaries (in-review)
      */
-    public Page<ApplicationInReviewSummaryDTO> getAllApplicationsInReview(Pageable pageable) {
+    public Page<ApplicationSummaryInReviewDTO> getAllApplicationsInReview(Pageable pageable) {
         return applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW, pageable)
-                .map(application -> new ApplicationInReviewSummaryDTO(
+                .map(application -> new ApplicationSummaryInReviewDTO(
                         application.getId(),
                         application.getFirstName(),
                         application.getLastName(),
@@ -125,7 +129,7 @@ public class ApplicationService {
      *
      * @param id application id
      */
-    public void approveApplication(long id) {
+    public ApplicationSummaryDTO approveApplication(long id) {
         Application application = findApplicationById(id);
 
         if (application.getStatus() != ApplicationStatus.IN_REVIEW) {
@@ -135,6 +139,8 @@ public class ApplicationService {
         application.setStatus(ApplicationStatus.APPROVED);
         saveApplication(application);
 
+        return toSummaryDTO(application);
+
     }
 
     /**
@@ -142,7 +148,7 @@ public class ApplicationService {
      *
      * @param id application id
      */
-    public void rejectApplication(long id, RejectApplicationInputDTO dto) {
+    public ApplicationSummaryDTO rejectApplication(long id, RejectApplicationInputDTO dto) {
         Application application = findApplicationById(id);
 
         if (application.getStatus() != ApplicationStatus.IN_REVIEW) {
@@ -153,6 +159,8 @@ public class ApplicationService {
         application.setRejectionReason(dto.rejectionReason());
 
         saveApplication(application);
+
+        return toSummaryDTO(application);
     }
 
     /**
@@ -290,6 +298,17 @@ public class ApplicationService {
         if (applicationRepository.existsByPersonalCodeAndStatus(personalCode, status)) {
             throw new IllegalArgumentException("Customer already has an active application");
         }
+    }
+
+    private ApplicationSummaryDTO toSummaryDTO(Application application) {
+        return new ApplicationSummaryDTO(
+                application.getId(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getPersonalCode(),
+                application.getStatus(),
+                application.getRejectionReason()
+        );
     }
 
 }

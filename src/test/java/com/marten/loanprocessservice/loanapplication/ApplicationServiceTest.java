@@ -1,7 +1,7 @@
 package com.marten.loanprocessservice.loanapplication;
 
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationInReviewSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
 import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
@@ -80,6 +80,7 @@ class ApplicationServiceTest {
         assertEquals("John", saved.getFirstName());
         assertEquals("Doe", saved.getLastName());
         assertEquals(input.loanAmount(), saved.getLoanAmount());
+                verify(scheduleService, times(1)).createAndSaveSchedule(saved);
     }
 
     @Test
@@ -105,6 +106,7 @@ class ApplicationServiceTest {
 
         assertEquals(ApplicationStatus.REJECTED, saved.getStatus());
         assertEquals(RejectionReason.CUSTOMER_TOO_OLD, saved.getRejectionReason());
+                verify(scheduleService, never()).createAndSaveSchedule(any());
     }
 
     @Test
@@ -229,10 +231,10 @@ class ApplicationServiceTest {
 
         when(applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW, pageable)).thenReturn(page);
 
-        Page<ApplicationInReviewSummaryDTO> result = applicationService.getAllApplicationsInReview(pageable);
+        Page<ApplicationSummaryInReviewDTO> result = applicationService.getAllApplicationsInReview(pageable);
 
         assertEquals(1, result.getTotalElements());
-        ApplicationInReviewSummaryDTO summary = result.getContent().getFirst();
+        ApplicationSummaryInReviewDTO summary = result.getContent().getFirst();
         assertEquals(3L, summary.id());
         assertEquals("John", summary.firstName());
     }

@@ -1,11 +1,10 @@
 package com.marten.loanprocessservice.loanapplication.dto;
 
-import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
-import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record ApplicationSummaryDTO(
+@Schema(description = "Example response for approved application")
+public record ApplicationApproveResponseExampleDTO(
+        @Schema(example = "1")
         Long id,
         @Schema(example = "Jane")
         String firstName,
@@ -13,10 +12,10 @@ public record ApplicationSummaryDTO(
         String lastName,
         @Schema(example = "39912310000")
         String personalCode,
-        @Schema(example = "IN_REVIEW")
-        ApplicationStatus status,
+        @Schema(example = "APPROVED")
+        String status,
         @Schema(nullable = true, example = "null")
-        RejectionReason rejectionReason
-        ) {
+        String rejectionReason
+) {
 
 }
