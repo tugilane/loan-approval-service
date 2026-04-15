@@ -3,6 +3,7 @@ package com.marten.loanprocessservice.loanapplication.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ApplicationSummaryInReviewDTO(
+        @Schema(example = "1")
         Long id,
         @Schema(example = "Jane")
         String firstName,

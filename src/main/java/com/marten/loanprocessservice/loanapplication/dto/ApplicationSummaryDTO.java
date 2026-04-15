@@ -6,6 +6,7 @@ import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ApplicationSummaryDTO(
+        @Schema(example = "1")
         Long id,
         @Schema(example = "Jane")
         String firstName,

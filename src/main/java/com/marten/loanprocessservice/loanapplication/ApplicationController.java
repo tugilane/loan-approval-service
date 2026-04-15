@@ -13,18 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marten.loanprocessservice.common.OpenApiExamplePayloads;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationApproveResponseExampleDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationRejectResponseExampleDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
 import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryRejectedDTO;
 import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,13 +43,13 @@ public class ApplicationController {
     }
 
     @PostMapping("/apply")
-    @Operation(summary = "Submit a new loan application", description = "Personal code must have a valid birth date and check number. Applications can be automatically rejected if the applicant is too old.")
+    @Operation(summary = "Submit a new loan application", description = "Use the example dropdown to switch between the accepted and automatically rejected 201 example responses. The personal code must contain a valid birth date and check number. Applications may be automatically rejected if the applicant is too old.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Application created",
-                    content = @Content(schema = @Schema(oneOf = {
-                            ApplicationSummaryDTO.class,
-                            ApplicationSummaryRejectedDTO.class
-                    })))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApplicationSummaryDTO.class), examples = {
+                            @ExampleObject(name = "InReview", summary = "Application accepted for review", description = "Application and schedule are created.", value = OpenApiExamplePayloads.APPLICATION_CREATED_IN_REVIEW_JSON),
+                            @ExampleObject(name = "AutoRejected", summary = "Application automatically rejected", description = "Application is created, no schedule.", value = OpenApiExamplePayloads.APPLICATION_CREATED_AUTO_REJECTED_JSON)
+                    }))
     })
     public ResponseEntity<ApplicationSummaryDTO> receiveLoanApplication(@Valid @RequestBody ApplicationInputDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.processApplication(dto));

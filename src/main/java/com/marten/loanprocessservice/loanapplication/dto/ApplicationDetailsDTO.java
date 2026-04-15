@@ -6,9 +6,11 @@ import java.util.List;
 import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
 import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
 import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ApplicationDetailsDTO(
+        @Schema(example = "1")
         Long id,
         @Schema(example = "John")
         String firstName,

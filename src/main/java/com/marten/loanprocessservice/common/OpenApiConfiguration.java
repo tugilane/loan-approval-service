@@ -1,25 +1,28 @@
 package com.marten.loanprocessservice.common;
 
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Loan Process Service API",
-                version = "v1",
-                description = "API for submitting loan applications, reviewing statuses, and making approval decisions.",
-                contact = @Contact(name = ""),
-                license = @License(name = "")
-        ),
-        servers = {
-                @Server(url = "/", description = "Default server")
-        }
-)
 public class OpenApiConfiguration {
+
+    @Bean
+    public OpenAPI loanProcessServiceOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Loan Process Service API")
+                        .version("v1")
+                        .description("API for submitting loan applications, reviewing statuses, and making approval decisions.")
+                        .contact(new Contact().name(""))
+                        .license(new License().name("")))
+                .servers(List.of(new Server().url("/").description("Default server")));
+    }
 }
