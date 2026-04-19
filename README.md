@@ -25,7 +25,7 @@ Backend service for a loan approval workflow built for the Coop Pank software de
 - Docker
 - Docker Compose (included with Docker Desktop)
 
-## Quick Start (Docker Compose)
+## Quick Start
 
 Clone and run:
 
@@ -37,7 +37,6 @@ docker compose up -d --build
 
 ## API Documentation
 
-- API Base URL: http://localhost:8080
 - Swagger UI: http://localhost:8080/swagger-ui/index.html
 - OpenAPI JSON: http://localhost:8080/v3/api-docs
 
@@ -91,6 +90,7 @@ docker compose up -d --build
 - `GET /applications/{id}` - Get one application with payment schedule
 - `GET /applications` - List all applications (paged)
 - `GET /applications/in-review` - List IN_REVIEW applications (paged)
+- `POST /applications/search` - Search applications by personal code (paged)
 - `POST /applications/{id}/approve` - Approve an application
 - `POST /applications/{id}/reject` - Reject an application with a reason
 
@@ -180,7 +180,7 @@ docker compose up -d
 
 ## Notes
 
-- Approximate total time spent: 32 hours
+- Approximate total time spent: 29 hours
 - Main challenges: Choosing final Swagger UI setup; checknumber calculation
 - Planned future work is tracked in the issue tracker
 - AI assistance was used for Swagger annotation cleanup, test generation support, core logic improvements, and refining the `@RestControllerAdvice` approach
