@@ -4,21 +4,21 @@ Backend service for a loan approval workflow built for the Coop Pank software de
 
 ## Table of Contents
 
-| Section                        | Link                                                              |
-| ------------------------------ | ----------------------------------------------------------------- |
-| Prerequisites                  | [Prerequisites](#prerequisites)                                   |
-| Quick Start (Docker Compose)   | [Quick Start (Docker Compose)](#quick-start-docker-compose)       |
-| API Documentation              | [API Documentation](#api-documentation)                           |
-| Main Features                  | [Main Features](#main-features)                                   |
-| Business Rules and Constraints | [Business Rules and Constraints](#business-rules-and-constraints) |
-| Endpoints                      | [Endpoints](#endpoints)                                           |
-| Database Schema Overview       | [Database Schema Overview](#database-schema-overview)             |
-| Database Migrations            | [Database Migrations](#database-migrations)                       |
-| Assignment Coverage            | [Assignment Coverage](#assignment-coverage)                       |
-| Optional Tasks                 | [Optional Tasks](#optional-tasks)                                 |
-| Troubleshooting                | [Troubleshooting](#troubleshooting)                               |
-| Notes                          | [Notes](#notes)                                                   |
-| Author                         | [Author](#author)                                                 |
+| Section                                                           |
+| ----------------------------------------------------------------- |
+| [Prerequisites](#prerequisites)                                   |
+| [Quick Start (Docker Compose)](#quick-start-docker-compose)       |
+| [API Documentation](#api-documentation)                           |
+| [Main Features](#main-features)                                   |
+| [Business Rules and Constraints](#business-rules-and-constraints) |
+| [Endpoints](#endpoints)                                           |
+| [Database Schema Overview](#database-schema-overview)             |
+| [Database Migrations](#database-migrations)                       |
+| [Assignment Coverage](#assignment-coverage)                       |
+| [Optional Tasks](#optional-tasks)                                 |
+| [Troubleshooting](#troubleshooting)                               |
+| [Notes](#notes)                                                   |
+| [Author](#author)                                                 |
 
 ## Prerequisites
 
@@ -180,10 +180,10 @@ docker compose up -d
 
 ## Notes
 
-- Approximate total time spent: 30 hours
-- Main challenge: rounding behavior in schedule calculations.
+- Approximate total time spent: 32 hours
+- Main challenges: Choosing final Swagger UI setup; checknumber calculation
 - Planned future work is tracked in the issue tracker
-- AI assistance was used for Swagger/OpenAPI annotation cleanup, test generation support, core logic improvements, and refining the `@RestControllerAdvice` approach
+- AI assistance was used for Swagger annotation cleanup, test generation support, core logic improvements, and refining the `@RestControllerAdvice` approach
 
 ## Author
 

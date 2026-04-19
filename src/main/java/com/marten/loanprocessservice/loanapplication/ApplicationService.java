@@ -1,21 +1,27 @@
 package com.marten.loanprocessservice.loanapplication;
 
-import com.marten.loanprocessservice.loanapplication.dto.*;
-import com.marten.loanprocessservice.loanapplication.model.Application;
-import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
-import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
-import com.marten.loanprocessservice.loanschedule.ScheduleService;
-import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
-import jakarta.transaction.Transactional;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
+import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
+import com.marten.loanprocessservice.loanschedule.ScheduleService;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ApplicationService {
@@ -32,9 +38,10 @@ public class ApplicationService {
     }
 
     /**
-     * Processes a new loan application.
-     * Validates the applicant's personal code, ensures that no application is currently in review.
-     * Creates the application and persists it. A payment schedule is created only for applications in review.
+     * Processes a new loan application. Validates the applicant's personal
+     * code, ensures that no application is currently in review. Creates the
+     * application and persists it. A payment schedule is created only for
+     * applications in review.
      *
      * @param dto - validated application input data
      */
@@ -63,7 +70,8 @@ public class ApplicationService {
     }
 
     /**
-     * Returns detailed information for a single application, including its schedule.
+     * Returns detailed information for a single application, including its
+     * schedule.
      *
      * @param id application id
      * @return application details and the corresponding schedule
@@ -93,35 +101,60 @@ public class ApplicationService {
     /**
      * Returns a paginated list of application summaries.
      *
-     * @param pageable application id
+     * @param pageable paging and sorting details
      * @return paginated application summaries
      */
     public Page<ApplicationSummaryDTO> getAllApplications(Pageable pageable) {
         return applicationRepository.findAll(pageable)
                 .map(application -> new ApplicationSummaryDTO(
-                        application.getId(),
-                        application.getFirstName(),
-                        application.getLastName(),
-                        application.getPersonalCode(),
-                        application.getStatus(),
-                        application.getRejectionReason()
-                ));
+                application.getId(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getPersonalCode(),
+                application.getStatus(),
+                application.getRejectionReason()
+        ));
+    }
+
+    /**
+     * Returns a paginated list of applications (summaries) for a specific personal code.
+     *
+     * @param personalCode applicant personal code
+     * @param pageable paging and sorting details
+     * @return paginated application summaries
+     */
+    public Page<ApplicationSummaryDTO> getApplicationsByPersonalCode(String personalCode, Pageable pageable) {
+
+        // Validate the personal code before searching
+        getAndValidateBirthdate(personalCode);
+        validateCheckNumer(personalCode);
+
+
+        return applicationRepository.findByPersonalCode(personalCode, pageable)
+                .map(application -> new ApplicationSummaryDTO(
+                application.getId(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getPersonalCode(),
+                application.getStatus(),
+                application.getRejectionReason()
+        ));
     }
 
     /**
      * Returns a paginated list of application summaries that are in review.
      *
-     * @param pageable application id
+     * @param pageable paging and sorting details
      * @return paginated application summaries (in-review)
      */
     public Page<ApplicationSummaryInReviewDTO> getAllApplicationsInReview(Pageable pageable) {
         return applicationRepository.findByStatus(ApplicationStatus.IN_REVIEW, pageable)
                 .map(application -> new ApplicationSummaryInReviewDTO(
-                        application.getId(),
-                        application.getFirstName(),
-                        application.getLastName(),
-                        application.getPersonalCode()
-                ));
+                application.getId(),
+                application.getFirstName(),
+                application.getLastName(),
+                application.getPersonalCode()
+        ));
     }
 
     /**
@@ -164,7 +197,8 @@ public class ApplicationService {
     }
 
     /**
-     * Validate and return the birthdate of the applicant based on the personal code.
+     * Validate and return the birthdate of the applicant based on the personal
+     * code.
      *
      * @param personalCode personal code of the applicant
      * @return birthdate of the applicant.
@@ -178,11 +212,17 @@ public class ApplicationService {
 
         // first digit must be between 1 and 8
         int century;
-        if (firstDigit == 1 || firstDigit == 2) century = 1800;
-        else if (firstDigit == 3 || firstDigit == 4) century = 1900;
-        else if (firstDigit == 5 || firstDigit == 6) century = 2000;
-        else if (firstDigit == 7 || firstDigit == 8) century = 2100;
-        else throw new IllegalArgumentException("Invalid personal code: first digit must be between 1 and 8");
+        if (firstDigit == 1 || firstDigit == 2) {
+            century = 1800; 
+        }else if (firstDigit == 3 || firstDigit == 4) {
+            century = 1900; 
+        }else if (firstDigit == 5 || firstDigit == 6) {
+            century = 2000; 
+        }else if (firstDigit == 7 || firstDigit == 8) {
+            century = 2100; 
+        }else {
+            throw new IllegalArgumentException("Invalid personal code: first digit must be between 1 and 8");
+        }
 
         int fullYear = century + year;
 
@@ -248,7 +288,7 @@ public class ApplicationService {
     /**
      * Create and return a new application
      *
-     * @param dto       application input data from controller
+     * @param dto application input data from controller
      * @param birthDate applicant birthdate
      * @return application entity
      */
@@ -278,10 +318,9 @@ public class ApplicationService {
                 rejectionReason
         );
 
-/*        System.out.println("Application created: " + application);
+        /*        System.out.println("Application created: " + application);
         System.out.println("Age of applicant: " + age);
         System.out.println("Application status: " + status);*/
-
         return application;
     }
 

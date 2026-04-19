@@ -22,7 +22,7 @@ public record ApplicationInputDTO(
         @Schema(example = "Peegel", maxLength = 32)
         String lastName,
         @NotBlank
-        @Pattern(regexp = "\\d{11}", message = "personalCode must contain exactly 11 digits")
+        @Pattern(regexp = "\\d{11}", message = "personal code must contain exactly 11 digits")
         @Schema(
                 example = "39912310000",
                 minLength = 11,

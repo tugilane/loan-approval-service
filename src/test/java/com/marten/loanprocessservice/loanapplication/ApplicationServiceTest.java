@@ -1,28 +1,5 @@
 package com.marten.loanprocessservice.loanapplication;
 
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
-import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
-import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
-import com.marten.loanprocessservice.loanapplication.model.Application;
-import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
-import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
-import com.marten.loanprocessservice.loanschedule.ScheduleService;
-import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +8,35 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationDetailsDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryDTO;
+import com.marten.loanprocessservice.loanapplication.dto.ApplicationSummaryInReviewDTO;
+import com.marten.loanprocessservice.loanapplication.dto.RejectApplicationInputDTO;
+import com.marten.loanprocessservice.loanapplication.model.Application;
+import com.marten.loanprocessservice.loanapplication.model.ApplicationStatus;
+import com.marten.loanprocessservice.loanapplication.model.RejectionReason;
+import com.marten.loanprocessservice.loanschedule.ScheduleService;
+import com.marten.loanprocessservice.loanschedule.dto.ScheduleRowOutputDTO;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationServiceTest {
@@ -80,7 +80,7 @@ class ApplicationServiceTest {
         assertEquals("John", saved.getFirstName());
         assertEquals("Doe", saved.getLastName());
         assertEquals(input.loanAmount(), saved.getLoanAmount());
-                verify(scheduleService, times(1)).createAndSaveSchedule(saved);
+        verify(scheduleService, times(1)).createAndSaveSchedule(saved);
     }
 
     @Test
@@ -106,7 +106,7 @@ class ApplicationServiceTest {
 
         assertEquals(ApplicationStatus.REJECTED, saved.getStatus());
         assertEquals(RejectionReason.CUSTOMER_TOO_OLD, saved.getRejectionReason());
-                verify(scheduleService, never()).createAndSaveSchedule(any());
+        verify(scheduleService, never()).createAndSaveSchedule(any());
     }
 
     @Test
@@ -221,6 +221,53 @@ class ApplicationServiceTest {
         assertEquals(2L, summary.id());
         assertEquals(ApplicationStatus.REJECTED, summary.status());
         assertEquals(RejectionReason.OTHER, summary.rejectionReason());
+    }
+
+    @Test
+    void getApplicationsByPersonalCodeMapsEntitiesToSummaryDto() {
+        Pageable pageable = PageRequest.of(0, 10);
+        String personalCode = "39912310000";
+
+        Application application = baseApplication(7L, ApplicationStatus.APPROVED);
+        Page<Application> page = new PageImpl<>(List.of(application), pageable, 1);
+
+        when(applicationRepository.findByPersonalCode(personalCode, pageable)).thenReturn(page);
+
+        Page<ApplicationSummaryDTO> result = applicationService.getApplicationsByPersonalCode(personalCode, pageable);
+
+        assertEquals(1, result.getTotalElements());
+        ApplicationSummaryDTO summary = result.getContent().getFirst();
+        assertEquals(7L, summary.id());
+        assertEquals(personalCode, summary.personalCode());
+        assertEquals(ApplicationStatus.APPROVED, summary.status());
+    }
+
+    @Test
+    void getApplicationsByPersonalCodeThrowsOnInvalidCheckNumber() {
+        Pageable pageable = PageRequest.of(0, 10);
+        String invalidPersonalCode = "39912310001"; // Invalid check number
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> applicationService.getApplicationsByPersonalCode(invalidPersonalCode, pageable)
+        );
+
+        assertTrue(ex.getMessage().contains("check number"));
+        verify(applicationRepository, never()).findByPersonalCode(any(), any());
+    }
+
+    @Test
+    void getApplicationsByPersonalCodeThrowsOnInvalidBirthdate() {
+        Pageable pageable = PageRequest.of(0, 10);
+        String invalidPersonalCode = "55001010001"; // Future birth date
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> applicationService.getApplicationsByPersonalCode(invalidPersonalCode, pageable)
+        );
+
+        assertTrue(ex.getMessage().contains("future"));
+        verify(applicationRepository, never()).findByPersonalCode(any(), any());
     }
 
     @Test
